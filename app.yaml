@@ -1,6 +1,8 @@
 runtime: custom
 env: flex
 
+service: search
+
 handlers:
 - url: /.*
   script: _go_app
