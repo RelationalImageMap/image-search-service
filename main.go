@@ -12,6 +12,10 @@ import (
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 	io.WriteString(w, "Received")
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -29,7 +33,16 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Print(string(cmdOutput.Bytes()))
 }
 
+func setupResponse(w *http.ResponseWriter, req *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+}
+
 func main() {
-	http.HandleFunc("/", indexHandler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", indexHandler)
+	// handler := cors.Default().Handler(mux)
+	// http.ListenAndServe(":8080", handler)
 	http.ListenAndServe(":8080", nil)
 }
