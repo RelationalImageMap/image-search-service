@@ -1,0 +1,6 @@
+runtime: custom
+env: flex
+
+handlers:
+- url: /.*
+  script: _go_app
